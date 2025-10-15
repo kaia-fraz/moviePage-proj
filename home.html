@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Rating App</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="home.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=BBH+Sans+Hegarty&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=BBH+Sans+Hegarty&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <header class="text-white">
     <nav class="bg-stone-800 p-4">
@@ -29,5 +30,18 @@
         <h1 class="font-['BBH_Sans_Hegarty'] text-2xl">Welcome to the Movie Rating App</h1>
         <p class="font-['BBH_Sans_Hegarty'] text-lg">Rate your favorite movies and see what others think!</p>
     </div>
+
+    <div id="popup" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden">
+        <div class="bg-stone-900 rounded-xl shadow-xl p-8 text-center w-[600px] sm:w-[700px] lg:w-[800px] relative">
+            <h2 class="text-2xl font-bold mb-2 text-white font-['Inter']">Hey!</h2>
+            <p class="text-white mb-4 font-['Inter']">Sign in to continue or create a new account.</p>
+            <div class="flex flex-col gap-3">
+                <button class=" text-white py-2 rounded hover:bg-stone-700 outline outline-stone-600">Sign In</button>
+                <button class="bg-green-600 text-white py-2 rounded hover:bg-green-700">Sign Up</button>
+            </div>
+
+      <button id="closePopup" class="absolute top-3 right-3 text-stone-500 hover:text-stone-600 text-xl">&times;</button>
+    </div>
+  </div>
 </body>
 </html>
