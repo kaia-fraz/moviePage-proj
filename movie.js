@@ -22,7 +22,7 @@ async function getMovies() {
       movieCard.className = "flex-none bg-stone-900 p-3 rounded-lg shadow hover:scale-105 transition";
 
       movieCard.innerHTML = `
-        <img class="rounded mb-3" src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+        <img class=" w-32 sm:w-36 md:w-40 lg:w-48 h-auto object-cover rounded-lg flex-shrink-0 cursor-pointer transition-transform hover:scale-105" src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
         <h2 class="text-lg font-semibold text-white">${movie.title}</h2>
         <p class="text-sm text-gray-300 mb-2 mt-2">Release Date: ${movie.release_date}</p>
         <p class="text-gray-400 text-sm">Critics Score: ____</p>
