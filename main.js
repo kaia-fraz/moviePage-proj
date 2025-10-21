@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+/*document.addEventListener('DOMContentLoaded', () => {
   const popup = document.getElementById('popup');
   const closeBtn = document.getElementById('closePopup');
 
@@ -11,5 +11,5 @@ document.addEventListener('DOMContentLoaded', () => {
   closeBtn.addEventListener('click', () => {
     popup.classList.add('hidden');
   });
-});
+});*/
 

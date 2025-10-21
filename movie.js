@@ -1,41 +1,49 @@
-const options = {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1NDBmMjY1M2I1YmUxNDMyMDcyODQ1MWU4MWZjNzAzZCIsIm5iZiI6MTc2MTAxMjY5OS4wMzQsInN1YiI6IjY4ZjZlYmRiMTRhNzhmOTVhZTk3ZmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.vAM8Qmr89rcJ1Nu9p4EoJ6CyxQRag-xElrMHqbDFGco'
+
+const API_KEY = "540f2653b5be14320728451e81fc703d"; // from TMDB
+const API_URL = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
+
+const movieList = document.getElementById("movie-list");
+
+async function getMovies() {
+  try {
+    const response = await fetch(API_URL);
+    const data = await response.json();
+
+    if (!data.results) {
+      throw new Error("No movie results found.");
+    }
+
+    movieList.innerHTML = "";
+
+    data.results.forEach(movie => {
+      const movieCard = document.createElement("div");
+      movieCard.className = "bg-stone-900 p-3 rounded-lg shadow hover:scale-105 transition";
+
+      movieCard.innerHTML = `
+        <img class="rounded mb-3" src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+        <h2 class="text-lg font-semibold text-white">${movie.title}</h2>
+        <p class="text-sm text-gray-300 mb-2 mt-2">Release Date: ${movie.release_date}</p>
+        <p class="text-gray-400 text-sm">Critics Score: ____</p>
+        <div class="rating" id="rating">
+            <span class="star bg-yellow-500" data-value="1">★</span>
+            <span class="star bg-yellow-500" data-value="2">★</span>
+            <span class="star bg-yellow-500" data-value="3">★</span>
+            <span class="star bg-yellow-500" data-value="4">★</span>
+            <span class="star bg-yellow-500" data-value="5">★</span>
+        </div>
+        <p id="rating-value" class="text-gray-400 text-sm">Your Rating: 0/5</p>
+
+      `;
+
+      movieList.appendChild(movieCard);
+    });
+
+  } catch (error) {
+    console.error("Error fetching movies:", error);
+    movieList.innerHTML = `<p class="text-red-500 text-center">Failed to load movies 😢</p>`;
   }
-};
+}
 
-fetch('https://api.themoviedb.org/3/account/22400301', options)
-  .then(res => res.json())
-  .then(res => console.log(res))
-  .catch(err => console.error(err));
+getMovies();
 
 
-
-/*const API_URL = 'https://api.themoviedb.org/3/movie/{movie_id}';
-
-const movieList = document.getElementById('movie-list');
-
-fetch(API_URL) 
-    .then(response => response.json())
-    .then( data => {
-        const movies = data.results;  
-        
-        movies.forEach(movie => {
-            const movieCard = document.createElement('div');
-            movieCard.classList.add('movie-card');
-
-            movieCard.innerHTML = `
-                <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title} Poster" class="w-full h-auto rounded-lg mb-4">
-                <h2 class="text-white text-lg font-semibold mb-2">${movie.title}</h2>
-                <p class="text-gray-300 text-sm mb-4">${movie.release_date}</p>
-                <p class="text-gray-400 text-sm">${movie.overview}</p>
-                <p>Rating: ${movie.vote_average}</p>
-            `;
-            movieList.appendChild(movieCard);
-        });
-    })
-    .catch(error => {
-        console.error('Error fetching movie data:', error);
-    });*/
