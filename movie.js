@@ -3,6 +3,8 @@ const API_KEY = "540f2653b5be14320728451e81fc703d"; // from TMDB
 const API_URL = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
 
 const movieList = document.getElementById("movie-list");
+const scrollLeftBtn = document.getElementById("scroll-left");
+const scrollRightBtn = document.getElementById("scroll-right");
 
 async function getMovies() {
   try {
@@ -17,7 +19,7 @@ async function getMovies() {
 
     data.results.forEach(movie => {
       const movieCard = document.createElement("div");
-      movieCard.className = "bg-stone-900 p-3 rounded-lg shadow hover:scale-105 transition";
+      movieCard.className = "flex-none bg-stone-900 p-3 rounded-lg shadow hover:scale-105 transition";
 
       movieCard.innerHTML = `
         <img class="rounded mb-3" src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
@@ -43,6 +45,14 @@ async function getMovies() {
     movieList.innerHTML = `<p class="text-red-500 text-center">Failed to load movies 😢</p>`;
   }
 }
+
+scrollLeftBtn.addEventListener("click", ( ) => {
+    movieList.scrollBy({ left: -300, behavior: 'smooth' });
+});
+
+scrollRightBtn.addEventListener("click", ( ) => {
+    movieList.scrollBy({ left: 300, behavior: 'smooth' });
+});
 
 getMovies();
 
