@@ -1,22 +1,41 @@
-const movies = [
-    {
-        id: 1,
-        title: "Inception",
-        description: "A thief who steals corporate secrets through the use of dream-sharing technology.",
-        image: "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg",
-        rating: 4.8
-    },
-    {
-        id: 2,
-        title: "The Dark Knight",
-        description: "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham.",
-        image: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
-        rating: 4.9
-    },
-    {
-        id: 3,
-        title: "Interstellar",
-        description: "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
-        image: "https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg",
-        rating: 4.7
-    },
+const options = {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1NDBmMjY1M2I1YmUxNDMyMDcyODQ1MWU4MWZjNzAzZCIsIm5iZiI6MTc2MTAxMjY5OS4wMzQsInN1YiI6IjY4ZjZlYmRiMTRhNzhmOTVhZTk3ZmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.vAM8Qmr89rcJ1Nu9p4EoJ6CyxQRag-xElrMHqbDFGco'
+  }
+};
+
+fetch('https://api.themoviedb.org/3/account/22400301', options)
+  .then(res => res.json())
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
+
+
+
+/*const API_URL = 'https://api.themoviedb.org/3/movie/{movie_id}';
+
+const movieList = document.getElementById('movie-list');
+
+fetch(API_URL) 
+    .then(response => response.json())
+    .then( data => {
+        const movies = data.results;  
+        
+        movies.forEach(movie => {
+            const movieCard = document.createElement('div');
+            movieCard.classList.add('movie-card');
+
+            movieCard.innerHTML = `
+                <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title} Poster" class="w-full h-auto rounded-lg mb-4">
+                <h2 class="text-white text-lg font-semibold mb-2">${movie.title}</h2>
+                <p class="text-gray-300 text-sm mb-4">${movie.release_date}</p>
+                <p class="text-gray-400 text-sm">${movie.overview}</p>
+                <p>Rating: ${movie.vote_average}</p>
+            `;
+            movieList.appendChild(movieCard);
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching movie data:', error);
+    });*/
