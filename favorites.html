@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>movies</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=BBH+Sans+Hegarty&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<header class="text-white">
+    <nav class="bg-stone-800 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-white text-lg font-bold font-['BBH_Sans_Hegarty']">Movie Rating App</a>
+            <div class="flex items-center">
+                <input type="text" placeholder="Search..." class="px-2 py-1 rounded-md mr-4">
+            </div>
+            <div class ="font-['BBH_Sans_Hegarty'] text-lg">
+                <a href="home.html" class="text-gray-300 hover:text-white mx-2">Home</a>
+                <a href="moviespage.html" class="text-gray-300 hover:text-white mx-2">Movies</a>
+                <a href="#" class="text-gray-300 hover:text-white mx-2">Sign In</a>
+            </div>
+        </div>
+    </nav>
+</header>
+<body class="bg-green-900 min-h-screen">
+
+   <!-- MOVIES SECTION-->
+
+    <div class=" mt-8 p-4 bg-stone-900 bg-opacity-75 rounded-lg mx-4">
+        <h2 class="text-white text-xl mb-4 font-['BBH_Sans_Hegarty']">Faves</h2>
+        <div class="relative flex items-center">
+            <div id='movie-list' class="flex flex-wrap gap-4 justify-center">
+                <!-- Movie cards will be dynamically inserted here -->
+            </div>    
+        </div>
+    </div>
+    <div class="flex justify-between gap-4 mx-7 my-5">
+          <div id="loading" class="text-center text-gray-400 my-6 hidden">Loading more movies...</div>
+        
+       </div>
+        <div id="page-info" class="text-white self-center"></div>
+        
+    </div>
+</body>
+</html>
