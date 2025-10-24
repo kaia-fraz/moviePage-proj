@@ -1,20 +1,27 @@
+
 const API_KEY = "540f2653b5be14320728451e81fc703d"; 
-const API_URL = `https://api.themoviedb.org/3/trending/movie/day?language=en-US&api_key=${API_KEY}`;
+const API_URL = [`https://api.themoviedb.org/3/movie/now_playing?language=en-US&api_key=${API_KEY}`];
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const pageInfo = document.getElementById("page-info");
+
+let currentPage = 1;
+let totalPages = 100;
+
+
 
 const movieList = document.getElementById("movie-list");
-const scrollLeftBtn = document.getElementById("scroll-left");
-const scrollRightBtn = document.getElementById("scroll-right");
 let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
-async function getMovies() {
+async function getMovies(page = 1) {
   try {
-    const response = await fetch(API_URL);
+    const response = await fetch(`${API_URL}&page=${page}`);
     const data = await response.json();
 
     if (!data.results) {
       throw new Error("No movie results found.");
     }
-
+//html insertion
     movieList.innerHTML = "";
 
     data.results.forEach(movie => {
@@ -37,8 +44,14 @@ async function getMovies() {
         <button class="favorites bg-green-600 text-white py-1 px-2 rounded ">Add to Favorites</button>
       `;
         
-      movieList.appendChild(movieCard);
-      
+        movieList.appendChild(movieCard);
+        //pagination
+        pageInfo.textContent = `Page ${page} of ${data.total_pages}`;
+        currentPage = page;
+
+        prevBtn.disabled = page === 1;
+        nextBtn.disabled = page === data.total_pages;
+      //stars
       const stars = movieCard.querySelectorAll(".star");
         const ratingValue = movieCard.querySelector("#rating-value");
 
@@ -60,61 +73,22 @@ async function getMovies() {
             
         });
     });
+    
+prevBtn.addEventListener("click", () => {
+  if (currentPage > 1) getMovies(currentPage - 1);
+});
+
+nextBtn.addEventListener("click", () => {
+  getMovies(currentPage + 1);
+});
 
   } catch (error) {
     console.error("Error fetching movies:", error);
     movieList.innerHTML = `<p class="text-red-500 text-center">Failed to load movies 😢</p>`;
   }
-}
-//scroll buttons
-scrollLeftBtn.addEventListener("click", ( ) => {
-    movieList.scrollBy({ left: -300, behavior: 'smooth' });
-});
-
-scrollRightBtn.addEventListener("click", ( ) => {
-    movieList.scrollBy({ left: 300, behavior: 'smooth' });
-});
-// Favorites Functionality
-function addToFavorites(movie) {
-    const alreadyFavorited = favorites.some(fav => fav.id === movie.id);
-    if (!alreadyFavorited) {
-        favorites.push(movie);
-        localStorage.setItem("favorites", JSON.stringify(favorites));
-    } else {
-        alert(`${movie.title} is already in your favorites!`);
-    }
-
-    renderFavorites();
 };
 
-function renderFavorites() {
-    const favoritesList = document.getElementById("favorites-list");
-    favoritesList.innerHTML = "";
-    favorites.forEach(movie => {
-        const movieCard = document.createElement("div");
-        movieCard.className = "flex-none bg-stone-900 p-3 rounded-lg shadow hover:scale-105 transition";
 
-        movieCard.innerHTML = `
-        <img class=" w-32 sm:w-36 md:w-40 lg:w-48 h-auto object-cover rounded-lg flex-shrink-0 cursor-pointer transition-transform hover:scale-105" src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
-        <h2 class="w-32 sm:w-36 md:w-40 lg:w-48 text-lg font-semibold text-white">${movie.title}</h2>
-        <p class="w-32 sm:w-36 md:w-40 lg:w-48 text-sm text-gray-300 mb-2 mt-2">Release Date: ${movie.release_date}</p>
-        <button class="remove-btn bg-red-600 text-white py-1 px-2 rounded ">Remove from Favorites</button>
-      `;
 
-      movieCard.querySelector(".remove-btn").addEventListener("click", () => {
-      removeFromFavorites(movie.id);
-    });
-
-        favoritesList.appendChild(movieCard);
-    });
-};
-//remove button
-        function removeFromFavorites(id) {
-  favorites = favorites.filter(movie => movie.id !== id);
-  localStorage.setItem("favorites", JSON.stringify(favorites));
-  renderFavorites();
-}
 getMovies();
- renderFavorites();
-
 
