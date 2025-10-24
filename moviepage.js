@@ -1,35 +1,40 @@
 
 const API_KEY = "540f2653b5be14320728451e81fc703d"; 
 const API_URL = [`https://api.themoviedb.org/3/movie/now_playing?language=en-US&api_key=${API_KEY}`];
-const prevBtn = document.getElementById("prevBtn");
-const nextBtn = document.getElementById("nextBtn");
-const pageInfo = document.getElementById("page-info");
 
 let currentPage = 1;
-let totalPages = 100;
-
-
+let totalPages = 3;
+let loading = false;
 
 const movieList = document.getElementById("movie-list");
+const loadingIndicator = document.getElementById("loading");
 let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
 async function getMovies(page = 1) {
+    if (loading) return; 
+  loading = true;
+  loadingIndicator.classList.remove("hidden");
+
   try {
     const response = await fetch(`${API_URL}&page=${page}`);
     const data = await response.json();
+
+        totalPages = data.total_pages;
 
     if (!data.results) {
       throw new Error("No movie results found.");
     }
 //html insertion
-    movieList.innerHTML = "";
+    if (page === 1) {
+        movieList.innerHTML = "";
+    }
 
     data.results.forEach(movie => {
       const movieCard = document.createElement("div");
       movieCard.className = "flex-none bg-stone-900 p-3 rounded-lg shadow hover:scale-105 transition";
 
       movieCard.innerHTML = `
-        <img class=" w-32 sm:w-36 md:w-40 lg:w-48 h-auto object-cover rounded-lg flex-shrink-0 cursor-pointer transition-transform hover:scale-105" src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+        <img loading="lazy" class=" w-32 sm:w-36 md:w-40 lg:w-48 h-auto object-cover rounded-lg flex-shrink-0 cursor-pointer transition-transform hover:scale-105" src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
         <h2 class="w-32 sm:w-36 md:w-40 lg:w-48 text-lg font-semibold text-white">${movie.title}</h2>
         <p class="w-32 sm:w-36 md:w-40 lg:w-48 text-sm text-gray-300 mb-2 mt-2">Release Date: ${movie.release_date}</p>
         <p class="text-gray-400 text-sm">Critics Score: ____</p>
@@ -45,12 +50,7 @@ async function getMovies(page = 1) {
       `;
         
         movieList.appendChild(movieCard);
-        //pagination
-        pageInfo.textContent = `Page ${page} of ${data.total_pages}`;
-        currentPage = page;
 
-        prevBtn.disabled = page === 1;
-        nextBtn.disabled = page === data.total_pages;
       //stars
       const stars = movieCard.querySelectorAll(".star");
         const ratingValue = movieCard.querySelector("#rating-value");
@@ -73,22 +73,26 @@ async function getMovies(page = 1) {
             
         });
     });
-    
-prevBtn.addEventListener("click", () => {
-  if (currentPage > 1) getMovies(currentPage - 1);
-});
-
-nextBtn.addEventListener("click", () => {
-  getMovies(currentPage + 1);
-});
 
   } catch (error) {
     console.error("Error fetching movies:", error);
     movieList.innerHTML = `<p class="text-red-500 text-center">Failed to load movies 😢</p>`;
+  } finally {
+    loading = false;
+    loadingIndicator.classList.add("hidden");
   }
 };
 
+window.addEventListener("scroll", () => {
+    const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrolled = window.scrollY;
 
+    if (scrolled >= scrollableHeight - 100 && !loading && currentPage < totalPages) {
+        currentPage++;
+        getMovies(currentPage);
+    }
+});
 
 getMovies();
+
 
