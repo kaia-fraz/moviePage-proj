@@ -7,16 +7,32 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="main.js" defer></script>
     <script src="featuredMovie.js" defer></script>
+    <script src="detailsMovie.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=BBH+Sans+Hegarty&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <header class="text-white">
+    
     <nav class="bg-stone-800 p-4">
+        <div id="sidebar" class="fixed top-0 left-0 h-full w-56 bg-stone-900 text-white transform -translate-x-full transition-transform duration-300 z-50 shadow-lg">
+            <div class="flex flex-col h-full p-4">
+                <h2 class="text-xl font-semibold mb-6">🎬 Movie App</h2>
+                <a href="faves.html" class="py-2 px-3 hover:bg-stone-800 rounded transition">Faves</a>
+                <a href="ratings.html" class="py-2 px-3 hover:bg-stone-800 rounded transition">My Ratings</a>
+                <a href="trending.html" class="py-2 px-3 hover:bg-stone-800 rounded transition">Trending</a>
+                <div class="mt-auto">
+                    <button id="closeSidebar" class="w-full bg-red-600 py-2 rounded hover:bg-red-700 mt-4">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
         <div class="container mx-auto flex justify-between items-center">
+            <button id="menuButton" class=" flex bg-stone-800 text-white p-3 rounded-md hover:bg-stone-700">☰</button>
             <a href="#" class="text-white text-lg font-bold font-['BBH_Sans_Hegarty']">Movie Rating App</a>
             <div class="flex items-center">
-                <input type="text" placeholder="Search..." class="px-2 py-1 rounded-md mr-4">
+                <input type="text" placeholder="Search..." class="px-2 py-1 rounded-md mr-4 w-60">
             </div>
             <div class ="font-['BBH_Sans_Hegarty'] text-lg">
                 <a href="#" class="text-gray-300 hover:text-white mx-2">Home</a>
@@ -26,6 +42,33 @@
         </div>
     </nav>
 </header>
+<!-- Sidebar -->
+
+
+<!-- MOVIE DETAILS POPUP] -->
+<div id="movie-modal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-50">
+  <div class="bg-stone-900 text-white rounded-xl p-6 w-[90%] sm:w-[600px] relative">
+    <button id="close-modal" class="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
+    <img id="modal-poster" class="w-40 sm:w-48 rounded-lg mx-auto mb-4" src="" alt="Movie Poster">
+    <h2 id="modal-title" class="text-2xl font-bold text-center mb-2"></h2>
+    <p id="modal-overview" class="text-gray-300 text-sm text-center mb-3"></p>
+    <p id="modal-release" class="text-gray-400 text-sm text-center mb-4"></p>
+
+    <div class="text-center mb-3">
+      <p class="text-gray-400 mb-2">Rate this movie:</p>
+      <div id="modal-stars" class="flex justify-center space-x-2 mb-2">
+        <button class="modal-star text-gray-500 text-2xl" data-value="1">★</button>
+        <button class="modal-star text-gray-500 text-2xl" data-value="2">★</button>
+        <button class="modal-star text-gray-500 text-2xl" data-value="3">★</button>
+        <button class="modal-star text-gray-500 text-2xl" data-value="4">★</button>
+        <button class="modal-star text-gray-500 text-2xl" data-value="5">★</button>
+      </div>
+      <p id="modal-rating-value" class="text-gray-400 text-sm">Your Rating: 0/5</p>
+      <button id="save-rating" class="mt-3 bg-green-600 hover:bg-green-700 px-4 py-2 rounded">Save Rating</button>
+    </div>
+  </div>
+</div>
+
 <body class="bg-[url('images/nature-bites-back-header-1024x683.jpeg')] bg-cover bg-center min-h-screen">
      <!--<div id="popup" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden">
         <div class="bg-stone-900 rounded-xl shadow-xl p-8 text-center w-[600px] sm:w-[700px] lg:w-[800px] relative">
@@ -79,7 +122,10 @@
     <!--FAVORITE MOVIES SECTION-->
 
     <div class=" mt-8 p-4 bg-stone-900 bg-opacity-75 rounded-lg mx-4">
-        <h2 class="text-white text-xl mb-4 font-['BBH_Sans_Hegarty']">Favorite Movies</h2>
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="text-white text-xl mb-4 font-['BBH_Sans_Hegarty']">Favorite Movies</h2>
+            <h3 class="justify-end text-gray-400 text-sm mb-2"><a href="">See More</a></h3>
+        </div>
         <div class="relative flex items-center">
             <button class="scroll-btn left text-stone-500 hover:text-stone-600 mr-2" id="scroll-left">❮</button>
             <div id='favorites-list' class="flex overflow-x-auto space-x-4 pb-4">

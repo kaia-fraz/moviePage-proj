@@ -20,6 +20,7 @@ async function getMovies() {
     data.results.forEach(movie => {
       const movieCard = document.createElement("div");
       movieCard.className = "flex-none bg-stone-900 p-3 rounded-lg shadow hover:scale-105 transition";
+        movieCard.id = "movies"
 
       movieCard.innerHTML = `
         <img class=" w-32 sm:w-36 md:w-40 lg:w-48 h-auto object-cover rounded-lg flex-shrink-0 cursor-pointer transition-transform hover:scale-105" src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
@@ -66,7 +67,7 @@ async function getMovies() {
     movieList.innerHTML = `<p class="text-red-500 text-center">Failed to load movies 😢</p>`;
   }
 }
-//scroll buttons
+//scroll
 scrollLeftBtn.addEventListener("click", ( ) => {
     movieList.scrollBy({ left: -300, behavior: 'smooth' });
 });
@@ -74,7 +75,7 @@ scrollLeftBtn.addEventListener("click", ( ) => {
 scrollRightBtn.addEventListener("click", ( ) => {
     movieList.scrollBy({ left: 300, behavior: 'smooth' });
 });
-// Favorites Functionality
+// Faves
 function addToFavorites(movie) {
     const alreadyFavorited = favorites.some(fav => fav.id === movie.id);
     if (!alreadyFavorited) {
@@ -117,4 +118,89 @@ function renderFavorites() {
 getMovies();
  renderFavorites();
 
+// movie popup
+
+const modal = document.getElementById("movie-modal");
+const closeModalBtn = document.getElementById("close-modal");
+const modalTitle = document.getElementById("modal-title");
+const modalPoster = document.getElementById("modal-poster");
+const modalOverview = document.getElementById("modal-overview");
+const modalRelease = document.getElementById("modal-release");
+const modalStars = document.querySelectorAll(".modal-star");
+const modalRatingValue = document.getElementById("modal-rating-value");
+const saveRatingBtn = document.getElementById("save-rating");
+
+let selectedMovie = null;
+let selectedRating = 0;
+
+// Open popup
+movieList.addEventListener("click", async (e) => {
+  const img = e.target.closest("img");
+  if (!img) return;
+
+  const movieCard = img.closest("div");
+  const title = movieCard.querySelector("h2").textContent;
+  const movie = [...favorites, ...JSON.parse(localStorage.getItem("movieCache") || "[]")]
+    .find(m => m.title === title);
+
+  const movieData = movie || await fetchMovieDetails(title);
+
+  selectedMovie = movieData;
+  openMovieModal(movieData);
+});
+
+async function fetchMovieDetails(title) {
+  const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(title)}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return data.results[0];
+}
+
+function openMovieModal(movie) {
+
+  modalPoster.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  modalOverview.textContent = movie.overview || "No overview available.";
+  modalRelease.textContent = `Release Date: ${movie.release_date || "Unknown"}`;
+
+  const savedRatings = JSON.parse(localStorage.getItem("ratings")) || {};
+  const movieRating = savedRatings[movie.id] || 0;
+  selectedRating = movieRating;
+
+  updateModalStars(movieRating);
+  modalRatingValue.textContent = `Your Rating: ${movieRating}/5`;
+
+  modal.classList.remove("hidden");
+}
+//stars
+function updateModalStars(rating) {
+  modalStars.forEach(star => {
+    star.classList.toggle("text-yellow-400", star.dataset.value <= rating);
+    star.classList.toggle("text-gray-500", star.dataset.value > rating);
+  });
+}
+
+modalStars.forEach(star => {
+  star.addEventListener("click", e => {
+    selectedRating = parseInt(e.target.dataset.value);
+    updateModalStars(selectedRating);
+    modalRatingValue.textContent = `Your Rating: ${selectedRating}/5`;
+  });
+});
+
+saveRatingBtn.addEventListener("click", () => {
+  if (!selectedMovie) return;
+
+  const ratings = JSON.parse(localStorage.getItem("ratings")) || {};
+  ratings[selectedMovie.id] = selectedRating;
+  localStorage.setItem("ratings", JSON.stringify(ratings));
+
+  alert(`You rated "${selectedMovie.title}" ${selectedRating}/5 ⭐`);
+  modal.classList.add("hidden");
+});
+
+// Close modal
+closeModalBtn.addEventListener("click", () => modal.classList.add("hidden"));
+window.addEventListener("click", e => {
+  if (e.target === modal) modal.classList.add("hidden");
+});
 
