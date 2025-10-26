@@ -26,34 +26,12 @@ async function getMovies() {
         <img class=" w-32 sm:w-36 md:w-40 lg:w-48 h-auto object-cover rounded-lg flex-shrink-0 cursor-pointer transition-transform hover:scale-105" src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
         <h2 class="w-32 sm:w-36 md:w-40 lg:w-48 text-lg font-semibold text-white">${movie.title}</h2>
         <p class="w-32 sm:w-36 md:w-40 lg:w-48 text-sm text-gray-300 mb-2 mt-2">Release Date: ${movie.release_date}</p>
-        <p class="text-gray-400 text-sm">Critics Score: ____</p>
-        <div class="rating" id="rating">
-            <button class="star text-gray-700" data-value="1">★</button>
-            <button class="star text-gray-700" data-value="2">★</button>
-            <button class="star text-gray-700" data-value="3">★</button>
-            <button class="star text-gray-700" data-value="4">★</button>
-            <button class="star text-gray-700" data-value="5">★</button>
-        </div>
-        <p id="rating-value" class="text-gray-400 text-sm">Your Rating: 0/5</p>
         <button class="favorites bg-green-600 text-white py-1 px-2 rounded ">Add to Favorites</button>
       `;
         
       movieList.appendChild(movieCard);
       
-      const stars = movieCard.querySelectorAll(".star");
-        const ratingValue = movieCard.querySelector("#rating-value");
-
-        stars.forEach(star => {
-          star.addEventListener("click", (e) => {
-            const rating = e.target.dataset.value;
-            ratingValue.innerText = `Your Rating: ${rating}/5`;
-
-            stars.forEach(s => {
-                s.classList.toggle("text-yellow-400", s.dataset.value <= rating);
-                s.classList.toggle("text-gray-600", s.dataset.value === rating);
-            });
-          });
-        });
+    
 
         movieCard.querySelector(".favorites").addEventListener("click", () => {
             alert(`${movie.title} added to favorites!`);
@@ -75,18 +53,24 @@ scrollLeftBtn.addEventListener("click", ( ) => {
 scrollRightBtn.addEventListener("click", ( ) => {
     movieList.scrollBy({ left: 300, behavior: 'smooth' });
 });
-// Faves
-function addToFavorites(movie) {
-    const alreadyFavorited = favorites.some(fav => fav.id === movie.id);
-    if (!alreadyFavorited) {
-        favorites.push(movie);
-        localStorage.setItem("favorites", JSON.stringify(favorites));
-    } else {
-        alert(`${movie.title} is already in your favorites!`);
-    }
 
-    renderFavorites();
-};
+// Faves
+
+function addToFavorites(movie) {
+  let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+  const exists = favorites.some(fav => fav.id === movie.id);
+  if (exists) {
+    alert(`${movie.title} is already in your favorites!`);
+    return;
+  }
+
+  favorites.push(movie);
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+  alert(`${movie.title} added to favorites!`);
+}
+
+
 
 function renderFavorites() {
     const favoritesList = document.getElementById("favorites-list");
