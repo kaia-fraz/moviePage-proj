@@ -1,6 +1,6 @@
 
 const API_KEY = "540f2653b5be14320728451e81fc703d"; 
-const API_URL = `https://api.themoviedb.org/3/movie/now_playing?language=en-US&api_key=${API_KEY}`;
+const API_URL = `https://api.themoviedb.org/3/movie/top_rated?language=en-US&api_key=${API_KEY}`;
 
 let currentPage = 1;
 let totalPages = 3;
@@ -205,3 +205,4 @@ closeModalBtn.addEventListener("click", () => modal.classList.add("hidden"));
 window.addEventListener("click", e => {
   if (e.target === modal) modal.classList.add("hidden");
 });
+

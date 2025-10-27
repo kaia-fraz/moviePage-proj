@@ -14,8 +14,22 @@ const modalRatingValue = document.getElementById("modal-rating-value");
 const saveRatingBtn = document.getElementById("save-rating");
 const closeModalBtn = document.getElementById("close-modal");
 
+document.addEventListener('DOMContentLoaded', () => {
+  const currentUser = localStorage.getItem("currentUser");
+  if (currentUser) {
+    renderUserProfile(currentUser);
+  }
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+  const loginBtn = document.getElementById("login-btn");
+if (loginBtn) {
+  loginBtn.addEventListener("click", () => {
+    console.log("Button clicked!");
+  });
+}
 
   if (favorites.length === 0) {
     favoritesList.innerHTML = `<p class="text-gray-400 text-lg">You have no favorite movies yet 😢</p>`;
