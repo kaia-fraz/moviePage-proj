@@ -188,12 +188,23 @@ modalStars.forEach(star => {
     modalRatingValue.textContent = `Your Rating: ${selectedRating}/5`;
   });
 });
+ 
 
 saveRatingBtn.addEventListener("click", () => {
   if (!selectedMovie) return;
-
+  const existingIndex = ratings.findIndex((m) => m.id === selectedMovie.id);
   const ratings = JSON.parse(localStorage.getItem("ratings")) || {};
-  ratings[selectedMovie.id] = selectedRating;
+ 
+  if (existingIndex !== -1) {
+    ratings[existingIndex].rating = selectedRating;
+  } else {
+     ratings.push({
+      id: selectedMovie.id,
+      title: selectedMovie.title,
+      poster_path: selectedMovie.poster_path,
+      rating: selectedRating
+    });
+  }
   localStorage.setItem("ratings", JSON.stringify(ratings));
 
   alert(`You rated "${selectedMovie.title}" ${selectedRating}/5 ⭐`);

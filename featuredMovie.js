@@ -113,7 +113,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   let ratings = JSON.parse(localStorage.getItem("ratings") || "[]");
-  const existingIndex = ratings.findIndex((m) => m.id === movieId);
 
   if (existingIndex !== -1) {
     ratings[existingIndex].rating = rating; 
