@@ -151,21 +151,26 @@ currentModalMovie = movie;
 
 const saveRatingBtn = document.getElementById("save-rating");
 saveRatingBtn.addEventListener("click", () => {
-  const modal = document.getElementById("movie-modal");
+  const movieId = modal.dataset.movieId;
+  const movieData = JSON.parse(modal.dataset.movieData);
   const rating = parseInt(modal.dataset.userRating);
 
-  if (!rating || !currentModalMovie) {
-    alert("Please select a rating first!");
-    return;
-  }
-
-  // --- Save to movieRatings in localStorage ---
+// Get current ratings from localStorage (object keyed by movieId)
   const ratings = JSON.parse(localStorage.getItem("movieRatings")) || {};
-  ratings[currentModalMovie.id] = {
+
+// Save or update the rating
+  ratings[movieId] = {
     rating,
-    ...currentModalMovie // store title, poster, etc.
-  };
-  localStorage.setItem("movieRatings", JSON.stringify(ratings));
+    title: movieData.title,
+    poster: movieData.poster_path
+};
+
+// Save back to localStorage
+localStorage.setItem("movieRatings", JSON.stringify(ratings));
+
+// Optional: update UI immediately
+renderRatedMovies();
+
 
   // --- Optionally add to favorites ---
   let favorites = JSON.parse(localStorage.getItem("favorites")) || [];

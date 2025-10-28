@@ -84,6 +84,58 @@ window.addEventListener("scroll", () => {
 });
 
 getMovies();
+// in main.js
+window.renderUserProfile = function(username) {
+  const loginBtn = document.getElementById("login-btn");
+  if (!loginBtn) return;
+
+  loginBtn.outerHTML = `
+    <div id="user-profile" class="relative flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-800 rounded">
+      <i class="fa-solid fa-user text-white"></i>
+      <span class="text-white font-semibold">${username}</span>
+      <div id="user-dropdown" class="hidden absolute top-12 right-0 bg-stone-900 border border-gray-700 rounded shadow-lg p-3 w-40">
+        <p class="text-sm text-gray-300 mb-2">User: ${username}</p>
+        <button id="logout-btn" class="text-red-500 hover:underline text-sm w-full text-left">Log Out</button>
+      </div>
+    </div>
+  `;
+
+  setTimeout(() => {
+    const userProfile = document.getElementById("user-profile");
+    const dropdown = document.getElementById("user-dropdown");
+
+    if (userProfile && dropdown) {
+      userProfile.addEventListener("click", () => dropdown.classList.toggle("hidden"));
+    }
+
+    const logoutBtn = document.getElementById("logout-btn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("currentUser");
+        location.reload();
+      });
+    }
+  }, 50);
+};
+
+  // hamburger
+  if (menuButton && sidebar) {
+    menuButton.addEventListener("click", () => {
+      sidebar.classList.toggle("-translate-x-full");
+    });
+  }
+
+  if (closeSidebar && sidebar) {
+    closeSidebar.addEventListener("click", () => {
+      sidebar.classList.add("-translate-x-full");
+    });
+  }
+
+  window.addEventListener("click", (e) => {
+    if (sidebar && menuButton && !sidebar.contains(e.target) && !menuButton.contains(e.target)) {
+      sidebar.classList.add("-translate-x-full");
+    }
+  });
 
 //faves
 function addToFavorites(movie) {
@@ -191,9 +243,10 @@ modalStars.forEach(star => {
  
 
 saveRatingBtn.addEventListener("click", () => {
-  if (!selectedMovie) return;
-  const existingIndex = ratings.findIndex((m) => m.id === selectedMovie.id);
+  if (!selectedMovie) return;  
   const ratings = JSON.parse(localStorage.getItem("ratings")) || {};
+  const existingIndex = ratings.findIndex((m) => m.id === selectedMovie.id);
+
  
   if (existingIndex !== -1) {
     ratings[existingIndex].rating = selectedRating;

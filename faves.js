@@ -3,7 +3,6 @@ const favoritesList = document.getElementById("favorites-list");
 let favorites = [];
 let selectedMovie = null;
 let selectedRating = 0;
-const API_KEY = "YOUR_TMDB_API_KEY_HERE"; // Make sure to replace
 
 const modal = document.getElementById("movie-modal");
 const modalPoster = document.getElementById("modal-poster");

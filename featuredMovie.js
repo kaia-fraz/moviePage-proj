@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
               ? `<p class="text-yellow-400 font-semibold mb-2">⭐ Rated: ${userRating}/5</p>`
               : ""
           }
-          <button class="add-fave-btn bg-blue-600 text-white py-1 px-2 rounded">Add to Favorites</button>
+          <button class="add-fave-btn bg-green-600 text-white py-1 px-2 rounded">Add to Favorites</button>
         `;
 
         // Add to favorites
@@ -63,7 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
           alert(`${movie.title} added to favorites!`);
         });
 
-        // Open modal on click
         card.querySelector("img").addEventListener("click", () => openModal(movie));
         targetList.appendChild(card);
       });
@@ -73,9 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ===================
-  // Modal functionality
-  // ===================
   const modal = document.getElementById("movie-modal");
   const closeModalBtn = document.getElementById("close-modal");
   const modalTitle = document.getElementById("modal-title");
@@ -118,7 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target === modal) modal.classList.add("hidden");
   });
 
-  // Save rating to localStorage
   saveRatingBtn.addEventListener("click", () => {
     if (!selectedRating || !currentMovie) {
       alert("Please select a rating first!");
@@ -136,20 +131,13 @@ document.addEventListener("DOMContentLoaded", () => {
     alert(`Saved rating: ${currentMovie.title} = ${selectedRating}/5`);
     modal.classList.add("hidden");
 
-    // Optional: refresh movie list so rating shows immediately
     fetchAndRender(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`, featuredList);
     fetchAndRender(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}&language=en-US`, trendingList);
   });
 
-  // ==========================
-  // Initial page load
-  // ==========================
   fetchAndRender(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`, featuredList);
   fetchAndRender(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}&language=en-US`, trendingList);
 
-  // ==========================
-  // Render favorites list
-  // ==========================
   const savedFavorites = JSON.parse(localStorage.getItem("favorites") || "[]");
   if (favoritesList) {
     favoritesList.innerHTML = "";

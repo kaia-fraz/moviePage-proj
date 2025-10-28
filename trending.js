@@ -1,5 +1,4 @@
 
-const API_KEY = "540f2653b5be14320728451e81fc703d"; 
 const API_URL = `https://api.themoviedb.org/3/movie/top_rated?language=en-US&api_key=${API_KEY}`;
 
 let currentPage = 1;

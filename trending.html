@@ -32,11 +32,11 @@
                     type="text" 
                     id="search-input"
                     placeholder="Search for a movie..." 
-                    class="w-1/2 px-4 py-2 rounded-lg border border-gray-700 bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                    class="px-4 py-2 rounded-lg border border-gray-700 bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
             </div>
 <!-- SEARCH RESULTS -->
-<div id="search-results" class="flex flex-wrap justify-center gap-6 px-4">
+<div id="search-results" class="flex justify-center gap-6 px-4">
   <!-- Movie search results will appear here -->
 </div>
             <div class ="font-['BBH_Sans_Hegarty'] text-lg">
@@ -47,6 +47,29 @@
         </div>
     </nav>
 </header>
+<!-- MOVIE DETAILS POPUP -->
+<div id="movie-modal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-50">
+  <div class="bg-stone-900 text-white rounded-xl p-6 w-[90%] sm:w-[600px] relative">
+    <button id="close-modal" class="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
+    <img id="modal-poster" class="w-40 sm:w-48 rounded-lg mx-auto mb-4" src="" alt="Movie Poster">
+    <h2 id="modal-title" class="text-2xl font-bold text-center mb-2"></h2>
+    <p id="modal-overview" class="text-gray-300 text-sm text-center mb-3"></p>
+    <p id="modal-release" class="text-gray-400 text-sm text-center mb-4"></p>
+
+    <div class="text-center mb-3">
+      <p class="text-gray-400 mb-2">Rate this movie!</p>
+      <div id="modal-stars" class="flex justify-center space-x-2 mb-2">
+        <button class="modal-star text-gray-500 text-2xl" data-value="1">★</button>
+        <button class="modal-star text-gray-500 text-2xl" data-value="2">★</button>
+        <button class="modal-star text-gray-500 text-2xl" data-value="3">★</button>
+        <button class="modal-star text-gray-500 text-2xl" data-value="4">★</button>
+        <button class="modal-star text-gray-500 text-2xl" data-value="5">★</button>
+      </div>
+      <p id="modal-rating-value" class="text-gray-400 text-sm">Your Rating: 0/5</p>
+      <button id="save-rating" class="mt-3 bg-green-600 hover:bg-green-700 px-4 py-2 rounded">Save Rating</button>
+    </div>
+  </div>
+</div>
 <body class="bg-green-900 min-h-screen">
 
    <!-- MOVIES SECTION-->

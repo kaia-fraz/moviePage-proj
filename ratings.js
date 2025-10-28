@@ -5,13 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderRatedMovies() {
     ratedMoviesContainer.innerHTML = '';
 
-    // If there are no rated movies, show message
     if (Object.keys(ratings).length === 0) {
       ratedMoviesContainer.innerHTML = '<p class="text-gray-300">No movies rated yet.</p>';
       return;
     }
 
-    // Loop through and render each rated movie
     for (const id in ratings) {
       const movie = ratings[id];
 
@@ -32,17 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
       ratedMoviesContainer.appendChild(movieCard);
     }
 
-    // Attach event listeners for "Remove Rating" buttons
     const removeButtons = document.querySelectorAll('.remove-rating');
     removeButtons.forEach(button => {
       button.addEventListener('click', (e) => {
         const movieId = e.target.dataset.id;
 
-        // Remove movie from ratings object and localStorage
         delete ratings[movieId];
         localStorage.setItem('movieRatings', JSON.stringify(ratings));
 
-        // Re-render the updated list
         renderRatedMovies();
       });
     });
