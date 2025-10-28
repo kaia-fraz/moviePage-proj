@@ -30,9 +30,19 @@
         <div class="container mx-auto flex justify-between items-center">
             <button id="menuButton" class=" flex bg-stone-800 text-white p-3 rounded-md hover:bg-stone-700">☰</button>
             <a href="home.html" class="text-white text-lg font-bold font-['BBH_Sans_Hegarty']">Movie Rating App</a>
-            <div class="flex items-center">
-                <input type="text" placeholder="Search..." class="px-2 py-1 rounded-md mr-4 w-60">
+            <div class="relative">
+            <input 
+                type="text" 
+                id="search-input"
+                placeholder="Search for a movie..." 
+                class=" px-4 py-2 rounded-lg border border-gray-700 bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+            <div 
+                id="search-results" 
+                class="absolute top-full left-0 bg-stone-900 text-white rounded-lg mt-2 p-2 max-h-80 overflow-y-auto shadow-lg hidden z-50"
+            ></div>
             </div>
+
             <div class ="font-['BBH_Sans_Hegarty'] text-lg">
                 <a href="#" class="text-gray-300 hover:text-white mx-2">Home</a>
                 <a href="moviespage.html" class="text-gray-300 hover:text-white mx-2">Movies</a>
@@ -113,6 +123,7 @@
         </div>
         <div class="relative flex items-center">
             <button class="scroll-btn left text-stone-500 hover:text-stone-600 mr-2" id="scroll-left-3">❮</button>
+            
             <div id='favorites-list' class="flex overflow-x-auto space-x-4 pb-4">
 
             </div>    

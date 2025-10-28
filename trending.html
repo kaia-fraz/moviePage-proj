@@ -27,9 +27,18 @@
         <div class="container mx-auto flex justify-between items-center">
             <button id="menuButton" class=" flex bg-stone-800 text-white p-3 rounded-md hover:bg-stone-700">☰</button>
             <a href="home.html" class="text-white text-lg font-bold font-['BBH_Sans_Hegarty']">Movie Rating App</a>
-            <div class="flex items-center">
-                <input type="text" placeholder="Search..." class="px-2 py-1 rounded-md mr-4">
+            <div class="flex justify-center my-6">
+                <input 
+                    type="text" 
+                    id="search-input"
+                    placeholder="Search for a movie..." 
+                    class="w-1/2 px-4 py-2 rounded-lg border border-gray-700 bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
             </div>
+<!-- SEARCH RESULTS -->
+<div id="search-results" class="flex flex-wrap justify-center gap-6 px-4">
+  <!-- Movie search results will appear here -->
+</div>
             <div class ="font-['BBH_Sans_Hegarty'] text-lg">
                 <a href="home.html" class="text-gray-300 hover:text-white mx-2">Home</a>
                 <a href="moviespage.html" class="text-gray-300 hover:text-white mx-2">Movies</a>

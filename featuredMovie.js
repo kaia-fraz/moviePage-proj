@@ -19,30 +19,42 @@ document.addEventListener("DOMContentLoaded", () => {
   scroll(document.getElementById("scroll-left-3"), document.getElementById("scroll-right-3"), favoritesList);
 
   // Utility for images
-  const getImageUrl = (path) => path ? `https://image.tmdb.org/t/p/w500${path}` : "images/no-image.png";
+  const getImageUrl = (path) =>
+    path ? `https://image.tmdb.org/t/p/w500${path}` : "images/no-image.png";
 
-  // Fetch movies and render
+  // Fetch movies and render them
   async function fetchAndRender(url, targetList) {
     try {
       const res = await fetch(url);
       const data = await res.json();
       if (!data.results || !targetList) return;
 
+      const ratings = JSON.parse(localStorage.getItem("movieRatings")) || {};
       targetList.innerHTML = "";
-      data.results.forEach(movie => {
+
+      data.results.forEach((movie) => {
         const card = document.createElement("div");
-        card.className = "flex-none flex-shrink-0 bg-stone-900 p-3 rounded-lg shadow hover:scale-105 transition";
+        const userRating = ratings[movie.id]?.rating;
+
+        card.className =
+          "flex-none flex-shrink-0 bg-stone-900 p-3 rounded-lg shadow hover:scale-105 transition";
         card.innerHTML = `
-          <img class="w-32 sm:w-36 md:w-40 lg:w-48 h-auto object-cover rounded-lg cursor-pointer mb-2" src="${getImageUrl(movie.poster_path)}" alt="${movie.title}">
+          <img class="w-32 sm:w-36 md:w-40 lg:w-48 h-auto object-cover rounded-lg cursor-pointer mb-2" 
+               src="${getImageUrl(movie.poster_path)}" alt="${movie.title}">
           <h2 class="w-32 sm:w-36 md:w-40 lg:w-48 text-white font-semibold text-lg">${movie.title}</h2>
-          <p class="w-32 sm:w-36 md:w-40 lg:w-48 text-gray-400 text-sm mb-2">Release: ${movie.release_date || "N/A"}</p>
-          <button class="add-fave-btn bg-blue-600 text-white py-1 px-2 rounded ">Add to Favorites</button>
+          <p class="text-gray-400 text-sm mb-2">Release: ${movie.release_date || "N/A"}</p>
+          ${
+            userRating
+              ? `<p class="text-yellow-400 font-semibold mb-2">⭐ Rated: ${userRating}/5</p>`
+              : ""
+          }
+          <button class="add-fave-btn bg-blue-600 text-white py-1 px-2 rounded">Add to Favorites</button>
         `;
 
         // Add to favorites
         card.querySelector(".add-fave-btn").addEventListener("click", () => {
           let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-          if (favorites.some(fav => fav.id === movie.id)) {
+          if (favorites.some((fav) => fav.id === movie.id)) {
             alert(`${movie.title} is already in favorites!`);
             return;
           }
@@ -57,11 +69,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     } catch (err) {
       console.error("Error loading movies:", err);
-      if (targetList) targetList.innerHTML = "<p class='text-red-500'>Failed to load movies.</p>";
+      targetList.innerHTML = "<p class='text-red-500'>Failed to load movies.</p>";
     }
   }
 
-  // Modal
+  // ===================
+  // Modal functionality
+  // ===================
   const modal = document.getElementById("movie-modal");
   const closeModalBtn = document.getElementById("close-modal");
   const modalTitle = document.getElementById("modal-title");
@@ -72,72 +86,85 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalRatingValue = document.getElementById("modal-rating-value");
   const saveRatingBtn = document.getElementById("save-rating");
 
+  let currentMovie = null;
   let selectedRating = 0;
 
   function openModal(movie) {
-    modal.classList.remove("hidden");
-    modal.dataset.movieId = movie.id;
-    modal.dataset.movieData = JSON.stringify(movie);
+    currentMovie = movie;
+    selectedRating = 0;
 
+    modal.classList.remove("hidden");
     modalTitle.textContent = movie.title;
     modalPoster.src = getImageUrl(movie.poster_path);
     modalOverview.textContent = movie.overview || "No description available.";
     modalRelease.textContent = `Release: ${movie.release_date || "N/A"}`;
+    modalRatingValue.textContent = "";
 
-    modalStars.forEach(s => s.classList.remove("text-yellow-400"));
+    modalStars.forEach((s) => s.classList.remove("text-yellow-400"));
   }
 
-    modalStars.forEach((star) => {
-      star.addEventListener("click", () => {
-        const value = parseInt(star.dataset.value);
-        modal.dataset.userRating = value;
+  modalStars.forEach((star) => {
+    star.addEventListener("click", () => {
+      selectedRating = parseInt(star.dataset.value);
       modalStars.forEach((s) =>
-        s.classList.toggle("text-yellow-400", parseInt(s.dataset.value) <= value)
+        s.classList.toggle("text-yellow-400", parseInt(s.dataset.value) <= selectedRating)
       );
-      modalRatingValue.textContent = `Your Rating: ${value}/5`;
+      modalRatingValue.textContent = `Your Rating: ${selectedRating}/5`;
     });
   });
 
   closeModalBtn.addEventListener("click", () => modal.classList.add("hidden"));
-  window.addEventListener("click", e => { 
-    if (e.target === modal) modal.classList.add("hidden"); 
+  window.addEventListener("click", (e) => {
+    if (e.target === modal) modal.classList.add("hidden");
   });
 
+  // Save rating to localStorage
   saveRatingBtn.addEventListener("click", () => {
-  const movieId = modal.dataset.movieId;
-  const rating = modal.dataset.userRating;
+    if (!selectedRating || !currentMovie) {
+      alert("Please select a rating first!");
+      return;
+    }
 
-  if (!rating) {
-    alert("Please select a rating first!");
-    return;
-  }
+    const ratings = JSON.parse(localStorage.getItem("movieRatings")) || {};
+    ratings[currentMovie.id] = {
+      rating: selectedRating,
+      title: currentMovie.title,
+      poster: currentMovie.poster_path,
+    };
+    localStorage.setItem("movieRatings", JSON.stringify(ratings));
 
-  let ratings = JSON.parse(localStorage.getItem("ratings") || "[]");
+    alert(`Saved rating: ${currentMovie.title} = ${selectedRating}/5`);
+    modal.classList.add("hidden");
 
-  if (existingIndex !== -1) {
-    ratings[existingIndex].rating = rating; 
-  } else {
-    ratings.push({ id: movieId, rating }); 
-  }
+    // Optional: refresh movie list so rating shows immediately
+    fetchAndRender(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`, featuredList);
+    fetchAndRender(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}&language=en-US`, trendingList);
+  });
 
-  localStorage.setItem("ratings", JSON.stringify(ratings));
-  alert(`${movieId} rated ${rating} stars!`);
-  modal.classList.add("hidden");
-});
-
+  // ==========================
+  // Initial page load
+  // ==========================
   fetchAndRender(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`, featuredList);
   fetchAndRender(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}&language=en-US`, trendingList);
 
+  // ==========================
+  // Render favorites list
+  // ==========================
   const savedFavorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-  savedFavorites.forEach(movie => {
-    const div = document.createElement("div");
-    div.className = "flex-none flex-shrink-0 bg-stone-900 p-3 rounded-lg shadow hover:scale-105 transition";
-    div.innerHTML = `
-      <img class="w-32 sm:w-36 md:w-40 lg:w-48 h-auto object-cover rounded-lg cursor-pointer mb-2" src="${getImageUrl(movie.poster_path)}" alt="${movie.title}">
-      <h2 class="w-32 sm:w-36 md:w-40 lg:w-48 text-white font-semibold text-lg">${movie.title}</h2>
-      <p class="w-32 sm:w-36 md:w-40 lg:w-48 text-gray-400 text-sm mb-2">Release: ${movie.release_date || "N/A"}</p>
-    `;
-    div.querySelector("img").addEventListener("click", () => openModal(movie));
-    favoritesList.appendChild(div);
+  if (favoritesList) {
+    favoritesList.innerHTML = "";
+    savedFavorites.forEach((movie) => {
+      const div = document.createElement("div");
+      div.className =
+        "flex-none flex-shrink-0 bg-stone-900 p-3 rounded-lg shadow hover:scale-105 transition";
+      div.innerHTML = `
+        <img class="w-32 sm:w-36 md:w-40 lg:w-48 h-auto object-cover rounded-lg cursor-pointer mb-2" 
+             src="${getImageUrl(movie.poster_path)}" alt="${movie.title}">
+        <h2 class="text-white font-semibold text-lg">${movie.title}</h2>
+        <p class="text-gray-400 text-sm mb-2">Release: ${movie.release_date || "N/A"}</p>
+      `;
+      div.querySelector("img").addEventListener("click", () => openModal(movie));
+      favoritesList.appendChild(div);
     });
+  }
 });
