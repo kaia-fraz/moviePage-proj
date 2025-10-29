@@ -139,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchAndRender(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}&language=en-US`, trendingList);
 
   const savedFavorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+
   if (favoritesList) {
     favoritesList.innerHTML = "";
     savedFavorites.forEach((movie) => {
@@ -150,9 +151,19 @@ document.addEventListener("DOMContentLoaded", () => {
              src="${getImageUrl(movie.poster_path)}" alt="${movie.title}">
         <h2 class="text-white font-semibold text-lg">${movie.title}</h2>
         <p class="text-gray-400 text-sm mb-2">Release: ${movie.release_date || "N/A"}</p>
+        <button class="remove-fave-btn bg-red-600 text-white py-1 px-2 rounded">Remove from Favorites</button>
       `;
       div.querySelector("img").addEventListener("click", () => openModal(movie));
+      div.querySelector(".remove-fave-btn").addEventListener("click", () => {
+      let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+      favorites = favorites.filter(fav => fav.id !== movie.id);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      div.remove();
+    });
+
       favoritesList.appendChild(div);
     });
   }
+
 });
+
