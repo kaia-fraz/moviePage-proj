@@ -10,17 +10,14 @@ const movieList = document.getElementById("movie-list");
 const loadingIndicator = document.getElementById("loading");
 let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
-// Get current user and render profile if logged in
 document.addEventListener('DOMContentLoaded', () => {
   const currentUser = localStorage.getItem("currentUser");
   if (currentUser) renderUserProfile(currentUser);
 });
 
-// Login button placeholder
 const loginBtn = document.getElementById("login-btn");
 if (loginBtn) loginBtn.addEventListener("click", () => console.log("Button clicked!"));
 
-// Fetch movies
 async function getMovies(page = 1) {
   if (loading) return;
   loading = true;
@@ -49,7 +46,6 @@ async function getMovies(page = 1) {
 
       movieList.appendChild(movieCard);
 
-      // Add to favorites
       movieCard.querySelector(".favorites").addEventListener("click", () => addToFavorites(movie));
     });
 
@@ -62,7 +58,6 @@ async function getMovies(page = 1) {
   }
 }
 
-// Infinite scroll
 window.addEventListener("scroll", () => {
   const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
   if (window.scrollY >= scrollableHeight - 100 && !loading && currentPage < totalPages) {
@@ -73,7 +68,6 @@ window.addEventListener("scroll", () => {
 
 getMovies();
 
-// Favorites
 function addToFavorites(movie) {
   const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
   if (favorites.some(f => f.id === movie.id)) return alert("Already in favorites!");
@@ -82,7 +76,6 @@ function addToFavorites(movie) {
   alert(`${movie.title} added to favorites!`);
 }
 
-// Movie Modal
 const modal = document.getElementById("movie-modal");
 const closeModalBtn = document.getElementById("close-modal");
 const modalTitle = document.getElementById("modal-title");

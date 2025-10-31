@@ -132,7 +132,7 @@ function renderUserProfile(username) {
   }, 50);
 }
 
-// ------------------ SEARCH RESULTS ------------------
+// search results
 function getImageUrl(path) {
   return path ? `https://image.tmdb.org/t/p/w500${path}` : "images/no-image.png";
 }
@@ -159,7 +159,7 @@ function renderSearchResults(movies) {
   searchResults.classList.remove("hidden");
 }
 
-// ------------------ MODAL ------------------
+// modal
 function openModal(movie) {
   const modal = document.getElementById("movie-modal");
   if (!modal) return;
@@ -181,10 +181,8 @@ function openModal(movie) {
   modalOverview.textContent = movie.overview || "No description available.";
   modalRelease.textContent = `Release: ${movie.release_date || "N/A"}`;
 
-  // Clear previous star selection
   modalStars.forEach(s => s.classList.remove("text-yellow-400"));
 
-  // Remove old listeners first to prevent stacking
   modalStars.forEach(star => {
     const newStar = star.cloneNode(true);
     star.parentNode.replaceChild(newStar, star);
@@ -215,7 +213,7 @@ function openModal(movie) {
   modal.classList.remove("hidden");
 }
 
-// ------------------ RATED MOVIES PAGE ------------------
+// rated movies
 function renderRatedMovies() {
   const ratedMoviesContainer = document.getElementById("rated-movies");
   if (!ratedMoviesContainer) return;

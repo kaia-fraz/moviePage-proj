@@ -2,12 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const API_KEY = "540f2653b5be14320728451e81fc703d";
   const BASE_URL = "https://api.themoviedb.org/3";
 
-  // Lists
   const featuredList = document.getElementById("movie-list");
   const trendingList = document.getElementById("movie-list-2");
   const favoritesList = document.getElementById("favorites-list");
 
-  // Scroll buttons
   const scroll = (leftBtn, rightBtn, list) => {
     if (!list) return;
     if (leftBtn) leftBtn.addEventListener("click", () => list.scrollBy({ left: -300, behavior: "smooth" }));
@@ -18,11 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
   scroll(document.getElementById("scroll-left-2"), document.getElementById("scroll-right-2"), trendingList);
   scroll(document.getElementById("scroll-left-3"), document.getElementById("scroll-right-3"), favoritesList);
 
-  // Utility for images
   const getImageUrl = (path) =>
     path ? `https://image.tmdb.org/t/p/w500${path}` : "images/no-image.png";
 
-  // Fetch movies and render them
   async function fetchAndRender(url, targetList) {
     try {
       const res = await fetch(url);

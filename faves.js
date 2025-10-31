@@ -36,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   renderFavorites();
 
-  // Modal same as ratings.js
   const modal = document.getElementById("movie-modal");
   const closeModalBtn = document.getElementById("close-modal");
   const modalTitle = document.getElementById("modal-title");
